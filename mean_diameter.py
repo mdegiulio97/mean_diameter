@@ -7,8 +7,6 @@ import sys
 #open file csv and plot the file
 df = pd.read_csv(r"C:\Users\info\OneDrive\Desktop\test2.csv", sep=";", decimal = ',', encoding="latin-1" )
 
-
-
 DiaTime = df ['Diastolic Time [sec]'] #diastolic time (time of min)
 DiaTime = np.array(DiaTime)
 DiaTime = DiaTime[~np.isnan(DiaTime)]
@@ -33,33 +31,29 @@ diameterDia = np.array(diameterDia)
 diameterSys = df['Diametro Sistolico [mm]'] #Diameter systolic
 diameterSys = np.array(diameterSys)
 
-#-#-#-#-#-#-#-#-#-#-#
-#print(math.isnan(EndPulse[0]))
-#calculation of points for each cardiac cycle
-
 period = Time[1] - Time[0]
 period = round(period, 2)
-print('Period (s) :',period)
+print('Period (s) :', period)
 
 freq = 1/period
 freq = round(freq, 2)
 print('Frequency (Hz) :', freq)
 
 CyclePoint = []
-for i in range (len(EndPulse)):
+for i in range(len(EndPulse)):
     numPoint = EndPulse[i] - DiaTime[i]
     CyclePoint.append((numPoint))
 #print(CyclePoint)
 
 #calculation of the points of each cycle
-for i in range (len(CyclePoint)):
+for i in range(len(CyclePoint)):
     CyclePoint[i] /= period
     CyclePoint[i] = round(CyclePoint[i], 2)
     CyclePoint[i] = int(CyclePoint[i])
 print('The number of points for each cycle are:',CyclePoint)
 
 #calculation of mean and median
-for i in range (len(CyclePoint)):
+for i in range(len(CyclePoint)):
     meanPoint = np.mean(CyclePoint)
     meanPoint = round(meanPoint)
     meanPoint = int(meanPoint)
