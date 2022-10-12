@@ -5,7 +5,7 @@ import math
 import sys
 
 #open file csv and plot the file
-df = pd.read_csv(r"C:\Users\info\OneDrive\Desktop\test2.csv", sep=";", decimal = ',', encoding="latin-1" )
+df = pd.read_csv(r"test2.csv", sep=";", decimal=',' , encoding="latin-1" )
 
 DiaTime = df ['Diastolic Time [sec]'] #diastolic time (time of min)
 DiaTime = np.array(DiaTime)
@@ -17,7 +17,6 @@ SysTime = np.array(SysTime)
 EndPulse = df['End Pulse Time [sec]'] #cycle end point
 EndPulse = np.array(EndPulse)
 EndPulse = EndPulse[~np.isnan(EndPulse)]
-
 
 Time = df['Tempo [ms]'] #time of simulation
 Time = np.array(Time)
@@ -43,7 +42,7 @@ CyclePoint = []
 for i in range(len(EndPulse)):
     numPoint = EndPulse[i] - DiaTime[i]
     CyclePoint.append((numPoint))
-#print(CyclePoint)
+print('Cycle point :', CyclePoint)
 
 #calculation of the points of each cycle
 for i in range(len(CyclePoint)):
@@ -62,16 +61,32 @@ for i in range(len(CyclePoint)):
 print('The average of the points per cycle is:',meanPoint)
 print('The median is:', median)
 
-# limit value accept: 10% of median
+#limit value accept: 15% of median
 rate_median = (median*15)/100
 rate_median = round(rate_median)
-print(rate_median)
+print('The range relative to the median in percent is +/-', rate_median)
 
+#delete bad cycle
+for i in range(len(CyclePoint)):
+    if (CyclePoint[i] > (median + rate_median)) or (CyclePoint[i] < (median - rate_median)):
+        CyclePoint.pop(i)
+        DiaTime = DiaTime.tolist() #covert array in lisr and use 'pop' to remove the bad cycle
+        DiaTime.pop(i)
 
+max_CyclePoint = max(CyclePoint)
+size_CyclePoint = len(CyclePoint)
 
+#create a empty matrix
+matrix = [[float('NaN')]*max_CyclePoint for i in range(size_CyclePoint)]
 
-
-
+time_index = 0
+for n in range(len(DiaTime)):
+    while Time[time_index] < (DiaTime[n]-0.001):
+        time_index += 1
+    for i in range(CyclePoint[n]):
+        matrix[n][i] = Diameter[time_index]
+        time_index += 1
+print(matrix)
 
 #plot1 :
 #plt.figure()
