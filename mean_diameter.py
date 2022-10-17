@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import math
-import sys
+
 
 # Open file csv and plot the file
 df = pd.read_csv(r"test2.csv", sep=";", decimal=',', encoding="latin-1")
@@ -41,7 +40,7 @@ print('Frequency (Hz) :', freq)
 CyclePoint = []
 for i in range(len(EndPulse)):
     numPoint = EndPulse[i] - DiaTime[i]
-    CyclePoint.append((numPoint))
+    CyclePoint.append(numPoint)
 print('Cycle point :', CyclePoint)
 
 # calculation of the points of each cycle
@@ -67,10 +66,11 @@ rate_median = round(rate_median)
 print('The range relative to the median in percent is +/-', rate_median)
 
 # delete bad cycle
-for i in range(len(CyclePoint)):
-    if (CyclePoint[i] > (median + rate_median)) or (CyclePoint[i] < (median - rate_median)):
+CyclePoint_original = CyclePoint.copy()
+DiaTime = DiaTime.tolist()#covert array in list and use 'pop' to remove the bad cycle
+for i in range(len(CyclePoint_original)-1,-1, -1):
+    if (CyclePoint_original[i] > (median + rate_median)) or (CyclePoint_original[i] < (median - rate_median)):
         CyclePoint.pop(i)
-        DiaTime = DiaTime.tolist() #covert array in list and use 'pop' to remove the bad cycle
         DiaTime.pop(i)
 
 max_CyclePoint = max(CyclePoint)
