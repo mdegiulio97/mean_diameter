@@ -79,6 +79,7 @@ size_CyclePoint = len(CyclePoint)
 #create a empty matrix
 matrix = [[float('NaN')]*max_CyclePoint for i in range(size_CyclePoint)]
 
+#matrix filling
 time_index = 0
 for n in range(len(DiaTime)):
     while Time[time_index] < (DiaTime[n]-0.001):
@@ -88,22 +89,22 @@ for n in range(len(DiaTime)):
         time_index += 1
 print(matrix)
 
-MeanCol = []
-Col = []
-for i in range(size_CyclePoint):
-    value = matrix[n][i]
-    Col.append(value)
-    n += 1
-mean = np.mean(Col)
-MeanCol.append(mean)
+#change matrix to array and calculate mean og column
+matrix = np.array(matrix)
+meanCol = np.nanmean(matrix, axis=0)
+print(meanCol)
 
-
-#plot1 :
-#plt.figure()
+#plot of diameter variation over time
+plt.figure()
 plt.plot(Time[:], Diameter[:])
 plt.xlabel("Time [ms]")
-plt.ylabel ("Diameter [mm]")
-plt.title("variazione nel tempo del diametro")
-#plt.show()
+plt.ylabel("Diameter [mm]")
+plt.title("diameter variation over time")
+plt.show()
 
+#plot of the time/diameter curve on average
+plt.figure()
+plt.plot(meanCol)
+plt.title("mean time/diameter curve")
+plt.show()
 
