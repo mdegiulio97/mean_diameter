@@ -88,6 +88,16 @@ for n in range(len(DiaTime)):
         time_index += 1
 print(matrix)
 
+MeanCol = []
+Col = []
+for i in range(size_CyclePoint):
+    value = matrix[n][i]
+    Col.append(value)
+    n += 1
+mean = np.mean(Col)
+MeanCol.append(mean)
+
+
 #plot1 :
 #plt.figure()
 plt.plot(Time[:], Diameter[:])
