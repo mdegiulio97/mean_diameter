@@ -4,7 +4,7 @@ import pandas as pd
 
 
 # Open file csv and plot the file
-df = pd.read_csv(r"test2.csv", sep=";", decimal=',', encoding="latin-1")
+df = pd.read_csv(r"C:\Users\info\PycharmProject\mean_diameter\test\test14_1.csv", sep=";", decimal=',', encoding="latin-1")
 
 DiaTime = df['Diastolic Time [sec]']# Diastolic time (time of min)
 DiaTime = np.array(DiaTime)
