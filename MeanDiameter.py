@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from scipy.interpolate import interp1d, interpolate
 
-
-# Open file csv and plot the file
 df = pd.read_csv(r"C:\Users\info\PycharmProject\mean_diameter\test\test2.csv", sep=";", decimal=',', encoding="latin-1")
 
 DiaTime = df['Diastolic Time [sec]']# Diastolic time (time of min)
@@ -77,22 +76,35 @@ max_CyclePoint = max(CyclePoint)
 size_CyclePoint = len(CyclePoint)
 
 # create a empty matrix
-matrix = [[float('NaN')]*max_CyclePoint for i in range(size_CyclePoint)]
 
 # matrix filling
+matrix = [[float('NaN')] * max_CyclePoint for i in range(size_CyclePoint)] #create a empty matrix
 time_index = 0
+x_new = np.linspace(0, 10, num=max_CyclePoint, endpoint=True)
 for n in range(len(DiaTime)):
+    vet = []
     while Time[time_index] < (DiaTime[n]-0.001):
         time_index += 1
     for i in range(CyclePoint[n]):
-        matrix[n][i] = Diameter[time_index]
+        vet.append(Diameter[time_index])
         time_index += 1
+    x = np.linspace(0, 10, num=i+1, endpoint=True)
+    f = interp1d(x, vet, kind='cubic')
+    y_new = f(x_new)
+    matrix.insert(n, vet)
 print(matrix)
 
-# change matrix to array and calculate mean og column
+#matrix[n][i] = Diameter[time_index]
+
+
+
+
+
+#print(matrix.shape)
 matrix = np.array(matrix)
-meanCol = np.nanmean(matrix, axis=0)
-print(meanCol)
+meanCol = np.mean(matrix, axis=0)
+#print(meanCol) 
+
 
 # plot of diameter variation over time
 plt.figure(1)
@@ -106,6 +118,3 @@ plt.figure(2)
 plt.plot(meanCol)
 plt.title("mean time/diameter curve")
 plt.show()
-
-
-
