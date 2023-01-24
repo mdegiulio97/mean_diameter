@@ -56,8 +56,7 @@ print('The number of points for each cycle are:', CyclePoint)
 
 # calculation of mean and median
 for i in range(len(CyclePoint)):
-    median = np.median(CyclePoint)
-    median = int(median)
+    median = int(np.median(CyclePoint))
 print('The median is:', median)
 
 # limit value accept: 15% of median
@@ -74,17 +73,14 @@ for i in range(len(CyclePoint_original)-1, -1, -1):
         DiaTime.pop(i)
 
 for i in range(len(CyclePoint)):
-    meanPoint = np.mean(CyclePoint)
-    meanPoint = round(meanPoint, 2)
-    meanPoint = float(meanPoint)
-print('The average of the points per cycle is:', meanPoint)
+    mean_Point = float(round(np.mean(CyclePoint), 2))
+print('The average of the points per cycle is:', mean_Point)
 
-max_CyclePoint = max(CyclePoint) #cycle max lenght
+max_CyclePoint = max(CyclePoint) #cycle max len
 size_CyclePoint = len(CyclePoint) #number of goog cycle
 
 # create a empty matrix
-# matrix filling
-#matrix = [[float('NaN')] * max_CyclePoint for i in range(size_CyclePoint)] #create a empty matrix
+# mat filling
 
 time_index = 0
 matrix = [] #empty list
@@ -97,16 +93,11 @@ for n in range(len(DiaTime)):
     for i in range(CyclePoint[n]):
         vet.append(Diameter[time_index])
         time_index += 1
-    #print(vet)
-#print(matrix)
-
 
 matrix = np.array(matrix, dtype=object)
 
 for i in range(len(matrix)):
     matrix[i] = resample(matrix[i], max_CyclePoint)
-
-
 
 mean_col = np.mean(matrix, axis=0)
 print(mean_col)
