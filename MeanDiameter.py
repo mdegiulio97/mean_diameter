@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from scipy.interpolate import interp1d, interpolate
+from scipy.signal import resample
+
 
 df = pd.read_csv(r"C:\Users\info\PycharmProject\mean_diameter\test\test2.csv", sep=";", decimal=',', encoding="latin-1")
 
@@ -42,6 +43,10 @@ for i in range(len(EndPulse)):
     CyclePoint.append(numPoint)
 print('Cycle point :', CyclePoint)
 
+average_cycle_point = np.mean(CyclePoint)
+average_cycle_point = round(average_cycle_point, 2)
+print(average_cycle_point)
+
 # calculation of the points of each cycle
 for i in range(len(CyclePoint)):
     CyclePoint[i] /= period
@@ -51,12 +56,8 @@ print('The number of points for each cycle are:', CyclePoint)
 
 # calculation of mean and median
 for i in range(len(CyclePoint)):
-    meanPoint = np.mean(CyclePoint)
-    meanPoint = round(meanPoint)
-    meanPoint = int(meanPoint)
     median = np.median(CyclePoint)
     median = int(median)
-print('The average of the points per cycle is:', meanPoint)
 print('The median is:', median)
 
 # limit value accept: 15% of median
@@ -72,38 +73,43 @@ for i in range(len(CyclePoint_original)-1, -1, -1):
         CyclePoint.pop(i)
         DiaTime.pop(i)
 
-max_CyclePoint = max(CyclePoint)
-size_CyclePoint = len(CyclePoint)
+for i in range(len(CyclePoint)):
+    meanPoint = np.mean(CyclePoint)
+    meanPoint = round(meanPoint, 2)
+    meanPoint = float(meanPoint)
+print('The average of the points per cycle is:', meanPoint)
+
+max_CyclePoint = max(CyclePoint) #cycle max lenght
+size_CyclePoint = len(CyclePoint) #number of goog cycle
 
 # create a empty matrix
-
 # matrix filling
-matrix = [[float('NaN')] * max_CyclePoint for i in range(size_CyclePoint)] #create a empty matrix
+#matrix = [[float('NaN')] * max_CyclePoint for i in range(size_CyclePoint)] #create a empty matrix
+
 time_index = 0
-x_new = np.linspace(0, 10, num=max_CyclePoint, endpoint=True)
+matrix = [] #empty list
 for n in range(len(DiaTime)):
-    vet = []
+    vet = [] #empty vector
+    matrix.append(vet) #add every vet (list type) in one more big list
+
     while Time[time_index] < (DiaTime[n]-0.001):
         time_index += 1
     for i in range(CyclePoint[n]):
         vet.append(Diameter[time_index])
         time_index += 1
-    x = np.linspace(0, 10, num=i+1, endpoint=True)
-    f = interp1d(x, vet, kind='cubic')
-    y_new = f(x_new)
-    matrix.insert(n, vet)
-print(matrix)
-
-#matrix[n][i] = Diameter[time_index]
+    #print(vet)
+#print(matrix)
 
 
+matrix = np.array(matrix, dtype=object)
+
+for i in range(len(matrix)):
+    matrix[i] = resample(matrix[i], max_CyclePoint)
 
 
 
-#print(matrix.shape)
-matrix = np.array(matrix)
-meanCol = np.mean(matrix, axis=0)
-#print(meanCol) 
+mean_col = np.mean(matrix, axis=0)
+print(mean_col)
 
 
 # plot of diameter variation over time
@@ -115,6 +121,6 @@ plt.title("diameter variation over time")
 
 # plot of the time/diameter curve on average
 plt.figure(2)
-plt.plot(meanCol)
+plt.plot(mean_col)
 plt.title("mean time/diameter curve")
 plt.show()
