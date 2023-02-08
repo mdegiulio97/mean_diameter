@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.signal import resample
+import cv2 as cv
 
 
 df = pd.read_csv(r"C:\Users\info\PycharmProject\mean_diameter\test\test2.csv", sep=";", decimal=',', encoding="latin-1")
@@ -44,8 +45,8 @@ for i in range(len(EndPulse)):
 print('Cycle point :', CyclePoint)
 
 average_cycle_point = np.mean(CyclePoint)
-average_cycle_point = round(average_cycle_point, 2)
-print(average_cycle_point)
+average_cycle = round(average_cycle_point, 2)
+print(average_cycle)
 
 # calculation of the points of each cycle
 for i in range(len(CyclePoint)):
@@ -64,7 +65,7 @@ rate_median = (median*15)/100
 rate_median = round(rate_median)
 print('The range relative to the median in percent is +/-', rate_median)
 
-# delete bad cycle
+# delete bad cycles
 CyclePoint_original = CyclePoint.copy()
 DiaTime = DiaTime.tolist()#covert array in list and use 'pop' to remove the bad cycle
 for i in range(len(CyclePoint_original)-1, -1, -1):
@@ -96,11 +97,18 @@ for n in range(len(DiaTime)):
 
 matrix = np.array(matrix, dtype=object)
 
+# resize and interpolation with scipy function
 for i in range(len(matrix)):
     matrix[i] = resample(matrix[i], max_CyclePoint)
-
 mean_col = np.mean(matrix, axis=0)
-print(mean_col)
+#print(mean_col)
+
+# resize and interpolation with OpenCv function
+matrix_cv = matrix.copy()
+for i in range(len(matrix_cv)):
+    matrix_cv[i] = cv.resize(matrix[i], (1, max_CyclePoint), interpolation=cv.INTER_CUBIC)
+mean_col_cv = np.mean(matrix_cv, axis=0)
+print(mean_col_cv)
 
 
 # plot of diameter variation over time
@@ -113,5 +121,10 @@ plt.title("diameter variation over time")
 # plot of the time/diameter curve on average
 plt.figure(2)
 plt.plot(mean_col)
-plt.title("mean time/diameter curve")
+plt.title("mean time/diameter curve (scipy)")
+
+# plot of the time/diameter curve on average with OpenCV
+plt.figure(3)
+plt.plot(mean_col_cv)
+plt.title("mean time/diameter curve (OpenCV)")
 plt.show()
