@@ -110,7 +110,6 @@ for i in range(len(matrix_cv)):
 mean_col_cv = np.mean(matrix_cv, axis=0)
 print(mean_col_cv)
 
-
 # plot of diameter variation over time
 plt.figure(1)
 plt.plot(Time[:], Diameter[:])
