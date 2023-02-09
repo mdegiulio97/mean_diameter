@@ -8,7 +8,7 @@ The goal is to obtain an average curve of the diameter variation
 
 #new project with python 3.10
 
-#library: scipy 1.9.1, pandas 1.5.0, matplotlib 3.6.1, nimpy 1.23.3, seaborn 0.12.0, scikit-learn 1.1.2
+#library: scipy 1.9.1, pandas 1.5.0, matplotlib 3.6.1, numpy 1.23.3, seaborn 0.12.0, scikit-learn 1.1.2, OpenCV 4.7.0.68, scipy 1.9.2
 
 #pip install <name library>  (command for install the library trought the terminal)
   
