@@ -101,14 +101,14 @@ matrix = np.array(matrix, dtype=object)
 for i in range(len(matrix)):
     matrix[i] = resample(matrix[i], max_CyclePoint)
 mean_col = np.mean(matrix, axis=0)
-#print(mean_col)
+# print(mean_col)
 
 # resize and interpolation with OpenCv function
 matrix_cv = matrix.copy()
 for i in range(len(matrix_cv)):
     matrix_cv[i] = cv.resize(matrix[i], (1, max_CyclePoint), interpolation=cv.INTER_CUBIC)
 mean_col_cv = np.mean(matrix_cv, axis=0)
-print(mean_col_cv)
+# print(mean_col_cv)
 
 # plot of diameter variation over time
 plt.figure(1)
